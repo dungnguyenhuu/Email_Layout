@@ -6,20 +6,26 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class EmailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class EmailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     List<EmailModel> modelList;
+    List<EmailModel> filterList;
 
     public EmailAdapter(List<EmailModel> modelList) {
         this.modelList = modelList;
+        this.filterList = new ArrayList<>(modelList);
     }
 
     @NonNull
@@ -52,6 +58,42 @@ public class EmailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public int getItemCount() {
         return modelList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<EmailModel> filteredList = new ArrayList<>();
+            String charSequence = constraint.toString();
+            if(charSequence.isEmpty()){
+                filteredList.addAll(filterList);
+            }else{
+                for(EmailModel e : filterList){
+                    if(e.getName().toLowerCase().contains(charSequence.toLowerCase())
+                        || e.getSubject().toLowerCase().contains(charSequence.toLowerCase())
+                        || e.getContent().toLowerCase().contains(charSequence.toLowerCase())){
+                        filteredList.add(e);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            modelList.clear();
+            modelList.addAll((Collection<? extends EmailModel>) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     class EmailViewHolder extends RecyclerView.ViewHolder{
 
