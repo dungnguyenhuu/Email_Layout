@@ -1,26 +1,24 @@
 package com.example.email;
 
+import java.util.Random;
+
 public class EmailModel {
-    String name;
-    String title;
-    String descriptions;
-    String time;
-    boolean isSelected;
+   String name;
+   String subject;
+   String content;
+   String time;
+   boolean isFavorite;
+   int color;
 
-    public EmailModel(String name, String title, String descriptions, String time) {
+    public EmailModel(String name, String subject, String content, String time) {
         this.name = name;
-        this.title = title;
-        this.descriptions = descriptions;
+        this.subject = subject;
+        this.content = content;
         this.time = time;
-        this.isSelected = false;
-    }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+        this.isFavorite = false;
+        Random random = new Random();
+        color = random.nextInt();
     }
 
     public String getName() {
@@ -31,12 +29,20 @@ public class EmailModel {
         this.name = name;
     }
 
-    public String getDescriptions() {
-        return descriptions;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setDescriptions(String descriptions) {
-        this.descriptions = descriptions;
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getTime() {
@@ -47,11 +53,19 @@ public class EmailModel {
         this.time = time;
     }
 
-    public boolean isSelected() {
-        return isSelected;
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
-    public void setSelected(boolean selected) {
-        isSelected = selected;
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }

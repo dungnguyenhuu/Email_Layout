@@ -6,10 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ListView
+
+    <Button
+        android:id="@+id/btnFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorite"
+        android:layout_alignParentEnd="true"/>
+    <EditText
+        android:id="@+id/etdSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a keyword"
+        android:layout_toLeftOf="@+id/btnFavorite"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_view_email"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/etdSearch"/>
 
 
 </RelativeLayout>

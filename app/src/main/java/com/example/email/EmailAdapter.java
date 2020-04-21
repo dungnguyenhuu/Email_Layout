@@ -1,97 +1,87 @@
 package com.example.email;
 
-import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
-import io.bloco.faker.Faker;
+public class EmailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-public class EmailAdapter extends BaseAdapter {
+    List<EmailModel> modelList;
 
+    public EmailAdapter(List<EmailModel> modelList) {
+        this.modelList = modelList;
+    }
 
-    Faker faker = new Faker();
-
-    List<EmailModel> emailModelList;
-
-    public EmailAdapter(List<EmailModel> emailModelList) {
-        this.emailModelList = emailModelList;
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item, parent, false);
+        return new EmailViewHolder(view);
     }
 
     @Override
-    public int getCount() {
-        return emailModelList.size();
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        EmailViewHolder viewHolder = (EmailViewHolder) holder;
+        EmailModel item = modelList.get(position);
+
+        viewHolder.txtLetter.setText(item.getName().substring(0,1));
+        Drawable background = viewHolder.txtLetter.getBackground();
+        background.setColorFilter(new PorterDuffColorFilter(item.getColor(), PorterDuff.Mode.SRC_ATOP));
+        viewHolder.txtName.setText(item.getName());
+        viewHolder.txtSubject.setText(item.getSubject());
+        viewHolder.txtContent.setText(item.getContent());
+        viewHolder.txtTime.setText(item.getTime());
+        if(item.isFavorite()){
+            viewHolder.imgFavorite.setImageResource(R.drawable.img_favorite);
+        }else {
+            viewHolder.imgFavorite.setImageResource(R.drawable.img_normal);
+        }
     }
 
     @Override
-    public Object getItem(int position) {
-        return emailModelList.get(position);
+    public int getItemCount() {
+        return modelList.size();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+    class EmailViewHolder extends RecyclerView.ViewHolder{
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-
-       if(convertView == null){
-           convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item, parent, false);
-            viewHolder = new ViewHolder();
-
-           viewHolder.txtName = convertView.findViewById(R.id.txtName);
-           viewHolder.txtTitle = convertView.findViewById(R.id.txtTitle);
-           viewHolder.txtDescription  = convertView.findViewById(R.id.txtDescriptions);
-           viewHolder.txtTime = convertView.findViewById(R.id.txtTime);
-           viewHolder.txtAvatar =  convertView.findViewById(R.id.txtAvatar);
-           viewHolder.imgFavorite = convertView.findViewById(R.id.imgFavorite);
-           viewHolder.imgBackground = convertView.findViewById(R.id.imgBackground);
-
-           convertView.setTag(viewHolder);
-       }else
-           viewHolder = (ViewHolder) convertView.getTag();
-
-       EmailModel emailModel =  emailModelList.get(position);
-
-       viewHolder.txtName.setText(emailModel.getName());
-       viewHolder.txtTitle.setText(emailModel.getTitle());
-       viewHolder.txtDescription.setText(emailModel.getDescriptions());
-       viewHolder.txtTime.setText(emailModel.getTime());
-       viewHolder.txtAvatar.setText(emailModel.getName().substring(0,1));
-
-
-       viewHolder.imgBackground.setColorFilter(Color.parseColor(faker.color.hexColor()));
-
-       if(emailModel.isSelected())
-           viewHolder.imgFavorite.setImageResource(R.drawable.img_favorite);
-       else
-           viewHolder.imgFavorite.setImageResource(R.drawable.img_normal);
-
-       viewHolder.imgFavorite.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               boolean isSelected = emailModelList.get(position).isSelected();
-               emailModelList.get(position).setSelected(!isSelected);
-               notifyDataSetChanged();
-           }
-       });
-        return convertView;
-    }
-
-    class ViewHolder{
+        TextView txtLetter;
         TextView txtName;
-        TextView txtTitle;
-        TextView txtDescription;
+        TextView txtSubject;
+        TextView txtContent;
         TextView txtTime;
-        TextView txtAvatar;
         ImageView imgFavorite;
-        ImageView imgBackground;
+
+        public EmailViewHolder(@NonNull View itemView) {
+            super(itemView);
+            txtLetter = itemView.findViewById(R.id.txtAvatar);
+            txtName = itemView.findViewById(R.id.txtName);
+            txtSubject = itemView.findViewById(R.id.txtTitle);
+            txtContent= itemView.findViewById(R.id.txtDescriptions);
+            txtTime = itemView.findViewById(R.id.txtTime);
+            imgFavorite = itemView.findViewById(R.id.imgFavorite);
+
+            imgFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isFavorite = modelList.get(getAdapterPosition()).isFavorite();
+                    modelList.get(getAdapterPosition()).setFavorite(!isFavorite);
+                    notifyDataSetChanged();
+                }
+            });
+        }
     }
 }
+
+
+
