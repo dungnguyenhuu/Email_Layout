@@ -20,7 +20,7 @@ import java.util.List;
 
 public class EmailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
-    List<EmailModel> modelList;
+    private List<EmailModel> modelList;
     List<EmailModel> filterList;
 
     public EmailAdapter(List<EmailModel> modelList) {
@@ -64,7 +64,7 @@ public class EmailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return filter;
     }
 
-    Filter filter = new Filter() {
+    private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<EmailModel> filteredList = new ArrayList<>();
